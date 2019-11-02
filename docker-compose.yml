@@ -1,0 +1,54 @@
+version: '3'
+services:
+  mysql:
+    build: ./mysql
+    ports:
+      - "3306:3306"
+    volumes:
+      - ./mysql/data:/var/lib/mysql
+      - ./mysql/my.cnf:/etc/my.cnf
+    environment:
+      MYSQL_ROOT_PASSWORD: 91yun
+    networks:
+      - net-mysql
+    restart: always
+    container_name: mysql
+
+
+  nginx:
+    build: ./nginx
+    ports: 
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx/www:/home/wwwroot
+      - ./nginx/conf.d:/etc/nginx/conf.d
+      - ./nginx/cert:/etc/nginx/cert
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf
+      - ./nginx/enable-php.conf:/etc/nginx/enable-php.conf
+      - ./nginx/log/error.log:/var/log/nginx/error.log
+      - ./nginx/log/access.log:/etc/nginx/logs/access.log
+    networks:
+      - net-php
+    restart: always
+    container_name: nginx
+
+
+  php:
+    build: ./php
+    volumes:
+      - ./nginx/www:/home/wwwroot
+      - ./php/config/php.ini:/usr/local/etc/php/php.ini
+      - ./php/config/php-fpm.conf:/usr/local/etc/php-fpm.conf
+      - ./php/config/php-fpm.d:/usr/local/etc/php-fpm.d
+    networks:
+      - net-php
+      - net-mysql  
+    restart: always
+    container_name: php
+
+    
+networks:
+  net-mysql:
+  net-php:
+    
