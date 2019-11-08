@@ -1,6 +1,5 @@
 FROM nginx:1.13.0-alpine
 
-### set timezome
-ENV TZ=Asia/Shanghai
-RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
-
+RUN apk update && apk add tzdata \
+	&& ln -sf /usr/share/zoneinfo/Asia/Shanghai /etc/localtime \ 
+	&& echo "Asia/Shanghai" > /etc/timezone
