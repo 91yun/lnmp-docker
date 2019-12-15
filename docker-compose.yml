@@ -1,7 +1,7 @@
 version: '3'
 services:
   mysql:
-    image: ./mysql
+    image: rongdede/mysql
     ports:
       - "3306:3306"
     volumes:
@@ -16,7 +16,7 @@ services:
 
 
   nginx:
-    image: ./nginx
+    image: rongdede/nginx
     ports: 
       - "80:80"
       - "443:443"
@@ -35,7 +35,7 @@ services:
 
 
   php:
-    image: ./php
+    image: rongdede/php
     volumes:
       - ./nginx/www:/home/wwwroot
       - ./php/config/php.ini:/usr/local/etc/php/php.ini
