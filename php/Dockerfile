@@ -10,4 +10,12 @@ RUN apk update && apk add tzdata \
 RUN cd ~ \
 	&& apk add libstdc++ libpng-dev \
     && docker-php-ext-install pdo_mysql mysqli pcntl gd\
-    && curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/bin/ --filename=composer \
+    && curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/bin/ --filename=composer 
+
+# 安装ioncube插件
+ADD https://downloads.ioncube.com/loader_downloads/ioncube_loaders_lin_x86-64.tar.gz /tmp/
+RUN tar xfzvC /tmp/ioncube_loaders_lin_x86-64.tar.gz /tmp/ \
+    && rm /tmp/ioncube_loaders_lin_x86-64.tar.gz \
+    && mv /tmp/ioncube/ioncube_loader_lin_7.3.so `php-config --extension-dir` \
+    && docker-php-ext-enable ioncube_loader_lin_7.3 \
+    && rm -rf /tmp/ioncube

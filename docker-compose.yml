@@ -1,7 +1,7 @@
 version: '3'
 services:
   mysql:
-    build: ./mysql
+    image: ./mysql
     ports:
       - "3306:3306"
     volumes:
@@ -16,7 +16,7 @@ services:
 
 
   nginx:
-    build: ./nginx
+    image: ./nginx
     ports: 
       - "80:80"
       - "443:443"
@@ -35,7 +35,7 @@ services:
 
 
   php:
-    build: ./php
+    image: ./php
     volumes:
       - ./nginx/www:/home/wwwroot
       - ./php/config/php.ini:/usr/local/etc/php/php.ini
