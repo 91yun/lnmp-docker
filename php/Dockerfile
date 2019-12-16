@@ -1,16 +1,27 @@
-FROM php:7.3-fpm-alpine
+# FROM php:7.3-fpm-alpine
+FROM php:7.3-fpm
+# RUN apk --no-cache add shadow
 
-RUN apk --no-cache add shadow \
-	&& usermod -u 1000 www-data
+# RUN apk update && apk add tzdata \
+# 	&& ln -sf /usr/share/zoneinfo/Asia/Shanghai /etc/localtime \ 
+# 	&& echo "Asia/Shanghai" > /etc/timezone	
 
-RUN apk update && apk add tzdata \
+
+RUN apt-get update && apt-get install -y tzdata \
 	&& ln -sf /usr/share/zoneinfo/Asia/Shanghai /etc/localtime \ 
-	&& echo "Asia/Shanghai" > /etc/timezone	
+	&& echo "Asia/Shanghai" > /etc/timezone
 
-RUN cd ~ \
-	&& apk add libstdc++ libpng-dev \
-    && docker-php-ext-install pdo_mysql mysqli pcntl gd\
-    && curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/bin/ --filename=composer 
+RUN apt-get update && apt-get install -y libpng-dev libzip-dev libxml2-dev libc-client-dev
+RUN docker-php-ext-install pdo_mysql mysqli pcntl gd zip soap xmlrpc
+RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/bin/ --filename=composer 
+
+RUN usermod -u 1000 www-data
+
+
+#安装imap
+RUN apt-get update && apt-get install -y libc-client-dev libkrb5-dev && rm -r /var/lib/apt/lists/*
+RUN docker-php-ext-configure imap --with-kerberos --with-imap-ssl \
+    && docker-php-ext-install imap
 
 # 安装ioncube插件
 ADD https://downloads.ioncube.com/loader_downloads/ioncube_loaders_lin_x86-64.tar.gz /tmp/
