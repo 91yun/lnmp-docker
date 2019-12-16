@@ -15,8 +15,8 @@ RUN apt-get update && apt-get install -y libpng-dev libzip-dev libxml2-dev libc-
 RUN docker-php-ext-install pdo_mysql mysqli pcntl gd zip soap xmlrpc
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/bin/ --filename=composer 
 
-RUN usermod -u 1000 www-data
-
+RUN usermod --non-unique --uid 1000 www-data \
+  && groupmod --non-unique --gid 1000 www-data
 
 #安装imap
 RUN apt-get update && apt-get install -y libc-client-dev libkrb5-dev && rm -r /var/lib/apt/lists/*
